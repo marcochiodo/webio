@@ -1,0 +1,17 @@
+.git/
+.github/
+node_modules/
+media/
+dist/assets/
+src/js/
+src/scss/
+.gitignore
+cloudbuild.yaml
+deploy.sh
+docker-compose.yml
+docker-run.sh
+npm.sh
+package-lock.json
+package.json
+README.md
+webpack.config.js

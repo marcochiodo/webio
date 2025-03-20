@@ -1,0 +1,21 @@
+{
+  "require": {
+    "php": "8.4.*",
+    "mrblue/mvc": "^1.2.0",
+    "guzzlehttp/guzzle": "^7.4",
+    "mrblue/framework": "~0.4",
+    "marcoc/input": "^2.8.4",
+    "aws/aws-sdk-php": "^3.311"
+  },
+  "autoload": {
+    "psr-4": {
+      "": "./src"
+    },
+    "files": [
+      "src/const.php"
+    ]
+  },
+  "scripts": {
+    "post-autoload-dump": "php vendor/bin/mrblue_mvc_gen_config.php -d config -o config_build.php"
+  }
+}

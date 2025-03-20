@@ -1,0 +1,6 @@
+vendor
+node_modules
+composer.phar
+config/locals
+dist
+config_build.php
