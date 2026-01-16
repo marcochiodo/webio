@@ -3,6 +3,6 @@
 bruno/
 examples/
 .gitignore
-composer.*
+composer.phar
 config_build.php
 docker-*
