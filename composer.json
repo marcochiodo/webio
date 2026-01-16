@@ -1,11 +1,12 @@
 {
   "require": {
-    "php": "8.4.*",
-    "mrblue/mvc": "^1.2.0",
+    "php": "8.5.*",
+    "mrblue/mvc": "^1.4.0",
     "guzzlehttp/guzzle": "^7.4",
     "mrblue/framework": "~0.4",
-    "marcoc/input": "^2.8.4",
-    "aws/aws-sdk-php": "^3.311"
+    "giggsey/libphonenumber-for-php-lite": "^8.13",
+    "symfony/mailer": "^6.1",
+    "altcha-org/altcha": "^1.2"
   },
   "autoload": {
     "psr-4": {

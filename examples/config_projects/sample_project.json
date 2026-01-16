@@ -1,0 +1,53 @@
+{
+  "name": "sample_project",
+  "origins": [
+    "http://localhost"
+  ],
+  "email": {
+    "to": "info@marcochiodo.it",
+    "smtp": "marcochiodo",
+    "language": "it"
+  },
+  "telegram": {
+    "to": 16474095,
+    "bot": "sigblue",
+    "language": "it"
+  },
+  "captcha": {
+    "provider": "altcha"
+  },
+  "elements": [
+    {
+      "type": "form",
+      "name": "sample_form",
+      "fields": [
+        {
+          "name": "first_name",
+          "required": true,
+          "min_length": 1,
+          "max_length": 50
+        },
+        {
+          "name": "last_name",
+          "required": true,
+          "min_length": 1,
+          "max_length": 50
+        },
+        {
+          "name": "email",
+          "required": true
+        },
+        {
+          "name": "phone",
+          "required": false
+        },
+        {
+          "name": "message",
+          "required": true,
+          "min_length": 1,
+          "max_length": 10000
+        }
+      ]
+    }
+  ]
+}

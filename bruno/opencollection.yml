@@ -1,0 +1,25 @@
+opencollection: 1.0.0
+
+info:
+  name: webio
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  headers:
+    - name: Origin
+      value: http://localhost
+bundled: false
+extensions:
+  ignore:
+    - node_modules
+    - .git

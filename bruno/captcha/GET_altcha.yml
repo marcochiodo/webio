@@ -1,0 +1,19 @@
+info:
+  name: /altcha
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{endpoint}}/captcha/altcha?project_name={{project_name}}"
+  params:
+    - name: project_name
+      value: "{{project_name}}"
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -2,9 +2,9 @@
 
 namespace Model;
 
-class Form extends AbstractModel {
+use \List\FieldList;
 
-    public ?FormEmail\EmailConfig $email_config;
-    public ?FormTelegram\TelegramConfig $telegram_config;
-    public \List\FieldList $field_list;
+class Form extends Element {
+
+    public FieldList $fields;
 }

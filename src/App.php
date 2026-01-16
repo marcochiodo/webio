@@ -17,7 +17,7 @@ class App {
     static public \DateTimeImmutable $Now;
     static public int $time;
 
-    static public \Aws\S3\S3Client $s3Client;
+    static public \Helper\Translation $Translation;
 
     static function init(array $config) {
 
@@ -28,15 +28,7 @@ class App {
         self::$time = self::$Now->getTimestamp();
         $Request = Request::getGlobalInstance();
 
-        self::$s3Client = new \Aws\S3\S3Client([
-            'region' => 'nl-ams',
-            'version' => '2006-03-01',
-            'endpoint' => 'http://s3.nl-ams.scw.cloud',
-            'credentials' => [
-                'key' => SCALEWAY_ACCESS_KEY_ID,
-                'secret' => SCALEWAY_SECRET_KEY
-            ]
-        ]);
+        self::$Translation = \Helper\Translation::createFromHttpHeader($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null);
     }
 
     static function _include(string $path, array $vars = []) {
@@ -67,5 +59,36 @@ class App {
         }
 
         return self::$json_files[$path];
+    }
+
+    static public function getSmtp(string $name, string &$user): \Symfony\Component\Mailer\Mailer {
+
+        $dsn = getenv("SMTP_DSN_" . strtoupper($name));
+
+        if (!$dsn) {
+            throw new \Exception("SMTP DSN not found for $name");
+        }
+
+        $Dsn = \Symfony\Component\Mailer\Transport\Dsn::fromString($dsn);
+        $user = $Dsn->getUser();
+
+        $TransportFactory = new \Symfony\Component\Mailer\Transport\Smtp\EsmtpTransportFactory();
+        return new \Symfony\Component\Mailer\Mailer(
+            $TransportFactory->create($Dsn)
+        );
+    }
+
+    static public function getTelegramBotHttpClient(string $name): \GuzzleHttp\Client {
+
+        $token = getenv("TELEGRAM_BOT_TOKEN_" . strtoupper($name));
+
+        if (! $token) {
+            throw new \Exception("Telegram Bot Token not found for $name");
+        }
+
+        return new \GuzzleHttp\Client([
+            'base_uri' => 'https://api.telegram.org/bot' . $token . '/',
+            'timeout'  => 15
+        ]);
     }
 }

@@ -1,0 +1,38 @@
+info:
+  name: /altcha
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{endpoint}}/captcha/altcha?project_name={{project_name}}&trust_dev_env=1"
+  params:
+    - name: project_name
+      value: "{{project_name}}"
+      type: query
+    - name: trust_dev_env
+      value: "1"
+      type: query
+  body:
+    type: form-urlencoded
+    data:
+      - name: solution
+        value: dd
+  auth: inherit
+
+runtime:
+  actions:
+    - type: set-variable
+      phase: after-response
+      selector:
+        expression: res.body.captcha_passed_token
+        method: jsonq
+      variable:
+        name: captcha_passed_token
+        scope: runtime
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

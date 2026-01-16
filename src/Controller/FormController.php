@@ -4,62 +4,75 @@ namespace Controller;
 
 use App;
 use Exception\ClientException;
-use GuzzleHttp\Client;
-use Model\Form;
 
-final class FormController extends BaseController {
+final class FormController extends ProjectController {
 
-    function get() {
+    function submit() {
 
-        $Form = $this->getForm();
-
-        return [
-            'success' => true
-        ];
-    }
-
-    function post() {
-
-        $Form = $this->getForm();
-
-        return [
-            'success' => true
-        ];
-    }
-
-    private function getForm(): Form {
         $params = $this->Mvc->getRouteMatch()->getParams();
-        $id = $params['id'];
+        $form_name = $params['form_name'];
+        $success = false;
+        $errors = [];
 
-        try {
-            $s3_data = \App::$s3Client->getObject([
-                'Bucket' => S3_BUCKET,
-                'Key' => 'form/' . $id . '.json'
-            ])->toArray();
-        } catch (\Aws\S3\Exception\S3Exception $th) {
-            if ($th->getStatusCode() == 404) {
-                throw new ClientException(ClientException::NOT_FOUND);
-            } else {
-                throw $th;
+        /** @var \Model\Form $Form */
+        $Form = $this->Project->elements->search('name', $form_name);
+        if (!$Form || $Form->type !== \Enum\ElementType::form) {
+            throw new \Exception\ClientException(ClientException::NOT_FOUND, 'Form not found');
+        }
+
+        $captcha_required = (bool) $this->Project->captcha;
+
+        if ($captcha_required) {
+            // TODO: validate captcha
+            $captcha_passed_token = filter_input(INPUT_POST, 'captcha_passed_token');
+            if (!$captcha_passed_token) {
+                $success = false;
+                $errors[] = App::$Translation->t('error_messages/captcha_token_missing');
+                goto end;
+            }
+            if (! $this->isCaptchaPassed($captcha_passed_token)) {
+                $success = false;
+                $errors[] = App::$Translation->t('error_messages/captcha_token_not_valid');
+                goto end;
             }
         }
 
-        try {
-            $json_content = json_decode($s3_data['Body'], true, flags: JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            throw new ClientException(ClientException::INTERNAL_SERVER_ERROR, 'Configuration formatting problem');
+        $FormValidator = new \Utils\FormValidator($Form);
+        $success = $FormValidator->validateFields();
+        $errors = $FormValidator->errors;
+
+        if (!$success) {
+            goto end;
         }
 
-        try {
-            $Form = new Form($json_content['config'] ?? []);
-        } catch (\Exception $e) {
-            throw new ClientException(ClientException::INTERNAL_SERVER_ERROR, 'Configuration fields problem');
+        $sent = false;
+
+        if ($this->Project->email) {
+            $EmailSender = new \Utils\EmailSender($this->Project->email, $FormValidator->validated_values);
+            if ($EmailSender->send()) {
+                $sent = true;
+            }
         }
 
-        if (! $Form->email_config && ! $Form->telegram_config) {
-            throw new ClientException(ClientException::INTERNAL_SERVER_ERROR, 'No communication channel configured');
+        if ($this->Project->telegram) {
+            $TelegramSender = new \Utils\TelegramSender($this->Project->telegram, $FormValidator->validated_values);
+            if ($TelegramSender->send()) {
+                $sent = true;
+            }
         }
 
-        return $Form;
+        if (!$sent) {
+            $success = false;
+            $errors[] = App::$Translation->t('error_messages/send_error');
+        }
+
+        end:
+
+        http_response_code($success ? 201 : 400);
+
+        return [
+            'success' => $success,
+            'errors' => $errors,
+        ];
     }
 }

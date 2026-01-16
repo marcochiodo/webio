@@ -1,0 +1,36 @@
+info:
+  name: submit
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{endpoint}}/form/sample_form/submit?project_name={{project_name}}"
+  params:
+    - name: project_name
+      value: "{{project_name}}"
+      type: query
+  body:
+    type: form-urlencoded
+    data:
+      - name: first_name
+        value: Marco
+      - name: last_name
+        value: Chiodo
+      - name: email
+        value: marcochio94@gmail.com
+      - name: phone
+        value: "3771315046"
+      - name: message
+        value: |-
+          Invio messaggio di prova.
+          Saluti
+      - name: captcha_passed_token
+        value: "{{captcha_passed_token}}"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

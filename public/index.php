@@ -30,13 +30,11 @@ set_error_handler(function ($severity, $message, $file, $line) {
 
 $Request = \mrblue\framework\Utils\Request::getGlobalInstance();
 
-define('SCALEWAY_ACCESS_KEY_ID', getenv('SCALEWAY_ACCESS_KEY_ID') ?: ('ENV "SCALEWAY_ACCESS_KEY_ID" not set'));
-define('SCALEWAY_SECRET_KEY', getenv('SCALEWAY_SECRET_KEY') ?: ('ENV "SCALEWAY_SECRET_KEY" not set'));
-define('S3_BUCKET', getenv('S3_BUCKET') ?: ('ENV "S3_BUCKET" not set'));
-
 define('REMOTE_ADDR', $Request->ip);
 define('BASE_URL', $Request->proto . '://' . $Request->server_name);
 define('REQUEST_PATH', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+
+include 'src/init_envar.php';
 
 if (APP_ENV !== ENV_DEVELOPMENT) {
     $config = require 'config_build.php';
@@ -52,6 +50,7 @@ App::init($config);
 foreach (
     [
         [Mvc::EVENT_ROUTE_EXCEPTION, new \MvcEventCallback\HandleNotFound, 110],
+        [Mvc::EVENT_AFTER_ROUTE, new \MvcEventCallback\HandleProject, 110],
         [Mvc::EVENT_CONTROLLER_EXCEPTION, new \MvcEventCallback\HandleException, 110],
     ] as $mvc_event_set
 ) {

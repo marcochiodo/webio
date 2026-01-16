@@ -2,7 +2,7 @@
 
 namespace List;
 
-use \Model\Field as Model;
+use \Model\Element as Model;
 
 /**
  * @method ?Model get( int $id )
@@ -13,7 +13,7 @@ use \Model\Field as Model;
  * @method Model offsetGet()
  */
 
-class FieldList extends AbstractList {
+class ElementList extends AbstractList {
 
     function __construct(array $items = []) {
         parent::__construct(Model::class, $items);

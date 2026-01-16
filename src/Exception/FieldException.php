@@ -2,40 +2,24 @@
 
 namespace Exception;
 
-class FieldException extends BaseException {
+use Enum\FieldError;
+
+class FieldException extends ClientException {
 
     const KIND = 'error';
 
+    const FIELD_ERROR = 400001;
+
     static protected $errors;
 
-    function __construct(int $code, string|array $data = []) {
+    function __construct(public readonly FieldError $FieldError, string $message) {
 
-        if (is_string($data)) {
-            $data = [
-                'dev_message' => $data
-            ];
-        }
-
-        parent::__construct($code, $data);
-    }
-
-    function createJsonView(bool $set_http): \mrblue\mvc\JsonView {
-
-        if ($set_http) {
-            header('Content-Type: application/json');
-            http_response_code($this->http_status_code);
-        }
-
-        return new \mrblue\mvc\JsonView([
-            'kind' => ClientException::KIND,
-            ClientException::KIND => $this
+        parent::__construct(self::FIELD_ERROR, [
+            'FieldException' => [
+                'code' => $this->FieldError->value,
+                'text_code' => $this->FieldError->name,
+                'message' => $message
+            ]
         ]);
-    }
-
-    function createJsonResponse(bool $set_http): \mrblue\mvc\Response {
-
-        $Response = new \mrblue\mvc\Response;
-        $Response->setView($this->createJsonView($set_http));
-        return $Response;
     }
 }

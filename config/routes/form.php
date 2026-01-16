@@ -1,63 +1,32 @@
 <?php
 
-use Controller\FormController;
 use mrblue\mvc\Route;
-
-const FORM_ID_REGEX = '[a-zA-Z]([a-zA-Z0-9\-\_]*[a-zA-Z0-9])?';
 
 return [
     'router' => [
         'routes' => [
-            'GET' => [
+            'POST' => [
                 'childs' => [
                     'form' => [
-                        'type' => Route::TYPE_LITERAL,
-                        'equal_to' => '/form',
-                        'controller' => FormController::class,
-                        'defaults' => [
-                            'action' => 'get'
+                        'type' => Route::TYPE_SEGMENT,
+                        'equal_to' => '/form/[:form_name]',
+                        'constraints' => [
+                            'form_name' => '[a-zA-Z0-9_]+'
                         ],
                         'may_terminate' => false,
+                        'controller' => \Controller\FormController::class,
                         'childs' => [
-                            'id' => [
-                                'type' => Route::TYPE_SEGMENT,
-                                'equal_to' => '/:id',
-                                'constraints' => [
-                                    'id' => FORM_ID_REGEX
-                                ],
+                            'submit' => [
+                                'type' => Route::TYPE_LITERAL,
+                                'equal_to' => '/submit',
                                 'defaults' => [
-                                    'action' => 'get'
-                                ],
+                                    'action' => 'submit'
+                                ]
                             ]
                         ]
                     ]
                 ]
             ]
         ],
-        'POST' => [
-            'childs' => [
-                'form' => [
-                    'type' => Route::TYPE_LITERAL,
-                    'equal_to' => '/form',
-                    'controller' => FormController::class,
-                    'defaults' => [
-                        'action' => 'post'
-                    ],
-                    'may_terminate' => false,
-                    'childs' => [
-                        'id' => [
-                            'type' => Route::TYPE_SEGMENT,
-                            'equal_to' => '/:id',
-                            'constraints' => [
-                                'id' => FORM_ID_REGEX
-                            ],
-                            'defaults' => [
-                                'action' => 'post'
-                            ],
-                        ]
-                    ]
-                ]
-            ]
-        ]
     ]
 ];
