@@ -3,4 +3,4 @@ variables:
   - name: endpoint
     value: http://localhost
   - name: project_name
-    value: project_name
+    value: sample_project

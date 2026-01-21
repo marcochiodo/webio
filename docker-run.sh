@@ -21,6 +21,7 @@ docker run -it --rm \
     -e SMTP_DSN_MARCOCHIODO="$DSN_VALUE" \
     -e TELEGRAM_BOT_TOKEN_SIGBLUE="$TELEGRAM_BOT_TOKEN" \
     -e ENCRYPTION_KEY="test key in devmode" \
+    -e PROJECT_CONFIG_SAMPLE_PROJECT="$(cat examples/config_projects/sample_project.json | jq -c '.' | base64 -w 0)" \
     -e PORT=80 \
     -p 80:8080 \
     --name webio \

@@ -6,6 +6,7 @@ use Exception\ClientException;
 use List\ProjectList;
 use Model\Project;
 use mrblue\mvc\MvcEvent;
+use Utils\Utils;
 
 class HandleProject extends AbstractMvcEventCallback {
 
@@ -52,37 +53,12 @@ class HandleProject extends AbstractMvcEventCallback {
 
     static function loadProjects(): ProjectList {
 
-        $apcu_key = 'projects';
-        $cache_filepath = sys_get_temp_dir() . "/projects-cache.txt";
-
-        if (apcu_exists($apcu_key)) {
-            $projects_data = apcu_fetch($apcu_key);
-        } elseif (is_file($cache_filepath)) {
-            $projects_data = unserialize(file_get_contents($cache_filepath));
-            apcu_store($apcu_key, $projects_data);
-        }
-
-        if (empty($projects_data)) {
-            $projects_data = [];
-            foreach (scandir(CONFIG_PROJECTS_PATCH) as $file) {
-                $extension = pathinfo($file, PATHINFO_EXTENSION);
-                if ($file[0] === '.' || $extension !== 'json') {
-                    continue;
-                }
-                try {
-                    $file_data = json_decode(file_get_contents(CONFIG_PROJECTS_PATCH . '/' . $file), true, flags: JSON_THROW_ON_ERROR);
-                    $Project = new Project($file_data);
-                } catch (\Exception $e) {
-                    continue;
-                }
-                $projects_data[$Project->name] = $file_data;
-            }
-            file_put_contents($cache_filepath, serialize($projects_data), LOCK_EX);
-        }
-
         $Projects = new ProjectList();
-        foreach ($projects_data as $project_name => $project_data) {
-            $Projects->add($project_data);
+        foreach (getenv() as $env_name => $env_value) {
+            if (str_starts_with($env_name, 'PROJECT_CONFIG_')) {
+                $json_data = json_decode(base64_decode($env_value) ?: '', true, flags: JSON_THROW_ON_ERROR);
+                $Projects->add($json_data);
+            }
         }
 
         return $Projects;
