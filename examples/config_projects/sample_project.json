@@ -1,7 +1,8 @@
 {
   "name": "sample_project",
   "origins": [
-    "http://localhost"
+    "http://localhost",
+    "http://localhost:3000"
   ],
   "email": {
     "to": "info@marcochiodo.it",

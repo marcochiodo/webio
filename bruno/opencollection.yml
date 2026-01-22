@@ -17,7 +17,7 @@ config:
 request:
   headers:
     - name: Origin
-      value: http://localhost
+      value: http://localhost:3000
 bundled: false
 extensions:
   ignore:
