@@ -67,6 +67,12 @@ class HandleProject extends AbstractMvcEventCallback {
     function validateOrigin(array $origin_list_allowed): bool {
         $request_origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-        return in_array($request_origin, $origin_list_allowed);
+        if (! in_array($request_origin, $origin_list_allowed)) {
+            return false;
+        }
+
+        header('Access-Control-Allow-Origin: ' . $request_origin);
+
+        return true;
     }
 }

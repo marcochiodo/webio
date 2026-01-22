@@ -4,3 +4,5 @@ variables:
     value: http://localhost
   - name: project_name
     value: sample_project
+  - name: form_name
+    value: sample_form

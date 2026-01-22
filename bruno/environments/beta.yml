@@ -3,4 +3,6 @@ variables:
   - name: endpoint
     value: https://webio-beta.host3.chdev.eu
   - name: project_name
-    value: vanessafemia
+    value: vanessafemia-beta
+  - name: form_name
+    value: contact
