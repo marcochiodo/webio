@@ -1,0 +1,8 @@
+name: prod
+variables:
+  - name: endpoint
+    value: https://webio.host3.chdev.eu
+  - name: project_name
+    value: vanessafemia-prod
+  - name: forn_name
+    value: contact
