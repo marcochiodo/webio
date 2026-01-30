@@ -5,19 +5,18 @@ namespace Utils;
 use App;
 use Exception\BaseException;
 use Model\Email;
-use Model\Field;
-use Model\Form;
 use mrblue\framework\Utils\Request;
 
-class EmailSender {
+class EmailSender
+{
 
     function __construct(
         private readonly Email $Email,
         private readonly array $data
-    ) {
-    }
+    ) {}
 
-    function createMessage(): array {
+    function createMessage(): array
+    {
 
         list($subject_template, $message_template) = explode("\n\n", file_get_contents('config/email-template.txt'), 2);
         $Request = Request::getGlobalInstance();
@@ -31,16 +30,17 @@ class EmailSender {
 
         return [
             'subject' => strtr($subject_template, [
-                '{site_name}' => $Request->host,
+                '{site_name}' => $Request->origin ?? $Request->referer ?? '?',
             ]),
             'message' => strtr($message_template, [
-                '{site_name}' => $Request->host,
+                '{site_name}' => $Request->origin ?? $Request->referer ?? '?',
                 '{fields}' => implode("\n", $fields),
             ])
         ];
     }
 
-    function send(): bool {
+    function send(): bool
+    {
 
         $user = '';
         $Mailer = App::getSmtp($this->Email->smtp, $user);

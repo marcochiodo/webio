@@ -7,15 +7,16 @@ use Exception\BaseException;
 use Model\Telegram;
 use mrblue\framework\Utils\Request;
 
-class TelegramSender {
+class TelegramSender
+{
 
     function __construct(
         private readonly Telegram $Telegram,
         private readonly array $data
-    ) {
-    }
+    ) {}
 
-    function createMessage(): string {
+    function createMessage(): string
+    {
 
         $message_template = file_get_contents('config/telegram-template.html');
         $Request = Request::getGlobalInstance();
@@ -29,12 +30,13 @@ class TelegramSender {
         }
 
         return strtr($message_template, [
-            '{site_name}' => $Request->host,
+            '{site_name}' => $Request->origin ?? $Request->referer ?? '?',
             '{fields}' => implode("\n", $fields),
         ]);
     }
 
-    function send(): bool {
+    function send(): bool
+    {
 
         $HttpClient = App::getTelegramBotHttpClient($this->Telegram->bot);
 
