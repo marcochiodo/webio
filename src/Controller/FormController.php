@@ -5,9 +5,11 @@ namespace Controller;
 use App;
 use Exception\ClientException;
 
-final class FormController extends ProjectController {
+final class FormController extends ProjectController
+{
 
-    function submit() {
+    function submit()
+    {
 
         $params = $this->Mvc->getRouteMatch()->getParams();
         $form_name = $params['form_name'];
