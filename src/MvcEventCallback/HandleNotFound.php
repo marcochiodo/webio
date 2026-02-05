@@ -2,6 +2,7 @@
 
 namespace MvcEventCallback;
 
+use App;
 use mrblue\mvc\JsonView;
 use mrblue\mvc\Mvc;
 use mrblue\mvc\MvcEvent;

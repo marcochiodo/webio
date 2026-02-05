@@ -11,7 +11,7 @@ return [
                         'type' => Route::TYPE_SEGMENT,
                         'equal_to' => '/form/[:form_name]',
                         'constraints' => [
-                            'form_name' => '[a-zA-Z0-9_]+'
+                            'form_name' => '[a-zA-Z0-9\-_]+'
                         ],
                         'may_terminate' => false,
                         'controller' => \Controller\FormController::class,

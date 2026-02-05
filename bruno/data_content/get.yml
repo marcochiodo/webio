@@ -1,0 +1,39 @@
+info:
+  name: get
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{endpoint}}/data_content/sample_data?project_name={{project_name}}&captcha_passed_token={{captcha_passed_token}}"
+  params:
+    - name: project_name
+      value: "{{project_name}}"
+      type: query
+    - name: captcha_passed_token
+      value: "{{captcha_passed_token}}"
+      type: query
+  body:
+    type: form-urlencoded
+    data:
+      - name: first_name
+        value: Marco
+      - name: last_name
+        value: Chiodo
+      - name: email
+        value: marcochio94@gmail.com
+      - name: phone
+        value: "3771315046"
+      - name: message
+        value: |-
+          Invio messaggio di prova.
+          Saluti
+      - name: captcha_passed_token
+        value: "{{captcha_passed_token}}"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

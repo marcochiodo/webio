@@ -11,7 +11,8 @@ abstract class Element extends AbstractModel {
 
     static function instance(array $data): self {
         return match ($data['type']) {
-            ElementType::form->value => new Form($data)
+            ElementType::form->value => new Form($data),
+            ElementType::data_content->value => new DataContent($data)
         };
     }
 }

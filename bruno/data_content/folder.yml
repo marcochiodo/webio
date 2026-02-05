@@ -1,0 +1,7 @@
+info:
+  name: data_content
+  type: folder
+  seq: 4
+
+request:
+  auth: inherit
