@@ -63,6 +63,7 @@ final class AltchaController extends ProjectController {
                 'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
                 'timestamp' => App::$time
             ])),
+            'expires' => App::$time + CAPTCHA_PASSED_TOKEN_TTL,
         ];
     }
 }
